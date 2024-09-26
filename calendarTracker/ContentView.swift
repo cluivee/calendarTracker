@@ -18,7 +18,6 @@ struct ContentView: View {
             VStack {
                 Text("Number of events: \(viewModel.calendarEvents.count)")
                 Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
-                Text("Start Date: \(viewModel.startDate)")
                 DatePicker(
                         "Start Date",
                         selection: $viewModel.startDate,
@@ -55,7 +54,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .frame(minWidth: 350, minHeight: 600)
+            .frame(minWidth: 300, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity, alignment: .topLeading)
             .onAppear {
                 viewModel.checkCalendarAuthorizationStatus()
             }
