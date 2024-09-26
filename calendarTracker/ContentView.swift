@@ -12,21 +12,32 @@ import EventKit
 struct ContentView: View {
 
     @StateObject private var viewModel = CalendarViewModel()
-    @State var startDate = Date()
+//    @State var startDate = Date()
         
         var body: some View {
             VStack {
+                Text("Number of events: \(viewModel.calendarEvents.count)")
+                Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
+                Text("Start Date: \(viewModel.startDate)")
+                DatePicker(
+                        "Start Date",
+                        selection: $viewModel.startDate,
+                        displayedComponents: [.date]
+                ).onChange(of: viewModel.startDate) {val in
+                    viewModel.fetchPreviousEvents()
+                }
+                DatePicker(
+                        "End Date",
+                        selection: $viewModel.endDate,
+                        displayedComponents: [.date]
+                ).onChange(of: viewModel.endDate) {val in
+                    viewModel.fetchPreviousEvents()
+                }
                 if viewModel.calendarEvents.isEmpty {
                     Text("No events found.")
                         .padding()
                 } else {
-                    Text("Number of events: \(viewModel.calendarEvents.count)")
-                    Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
-                    DatePicker(
-                            "Start Date",
-                            selection: $startDate,
-                            displayedComponents: [.date]
-                        )
+                   
                     List(viewModel.calendarEvents, id: \.eventIdentifier) { event in
                         VStack(alignment: .leading) {
                             Text(event.title ?? "No Title")
