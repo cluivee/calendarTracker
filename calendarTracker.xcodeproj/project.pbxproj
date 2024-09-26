@@ -14,6 +14,7 @@
 		893EB99E2CA44CE200FAFA9F /* calendarTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB99D2CA44CE200FAFA9F /* calendarTrackerTests.swift */; };
 		893EB9A82CA44CE200FAFA9F /* calendarTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB9A72CA44CE200FAFA9F /* calendarTrackerUITests.swift */; };
 		893EB9AA2CA44CE200FAFA9F /* calendarTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB9A92CA44CE200FAFA9F /* calendarTrackerUITestsLaunchTests.swift */; };
+		893EB9B72CA4573700FAFA9F /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB9B62CA4573700FAFA9F /* CalendarViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		893EB9A32CA44CE200FAFA9F /* calendarTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = calendarTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		893EB9A72CA44CE200FAFA9F /* calendarTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calendarTrackerUITests.swift; sourceTree = "<group>"; };
 		893EB9A92CA44CE200FAFA9F /* calendarTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calendarTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		893EB9B62CA4573700FAFA9F /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				893EB98F2CA44CE200FAFA9F /* Assets.xcassets */,
 				893EB9942CA44CE200FAFA9F /* calendarTracker.entitlements */,
 				893EB9912CA44CE200FAFA9F /* Preview Content */,
+				893EB9B62CA4573700FAFA9F /* CalendarViewModel.swift */,
 			);
 			path = calendarTracker;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				893EB9B72CA4573700FAFA9F /* CalendarViewModel.swift in Sources */,
 				893EB98E2CA44CDE00FAFA9F /* ContentView.swift in Sources */,
 				893EB98C2CA44CDE00FAFA9F /* calendarTrackerApp.swift in Sources */,
 			);
@@ -426,6 +430,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Access to your calendar required to display your events";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Access to your contacts required to display your events";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -453,6 +459,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Access to your calendar required to display your events";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Access to your contacts required to display your events";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
