@@ -34,7 +34,6 @@ class CalendarViewModel: ObservableObject {
         }
     }
     
-    
     // Request access to the calendar
     func requestAccess() {
         store.requestAccess(to: .event, completion:
@@ -47,7 +46,7 @@ class CalendarViewModel: ObservableObject {
            })
         }
     
-    // calculate duration
+    // calculating duration
     func duration(of event: EKEvent) -> Double {
             let durationSecs = event.endDate.timeIntervalSince(event.startDate)
 //            let hours = Int(durationInSeconds) / 3600
