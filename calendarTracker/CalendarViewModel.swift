@@ -18,6 +18,8 @@ class CalendarViewModel: ObservableObject {
     @Published var startDate = Date()
     @Published var endDate = Date()
     
+    @Published var selectedCalendar = Set<EKCalendar>()
+    
     func checkCalendarAuthorizationStatus() {
         let status = EKEventStore.authorizationStatus(for: .event)
         
@@ -61,20 +63,22 @@ class CalendarViewModel: ObservableObject {
     // Fetch previous events from the calendar
     func fetchPreviousEvents() {
         let calendars = store.calendars(for: .event)
+        print(calendars)
         
         // Specify the date range for fetching past events (e.g., last 1 year)
 //        let now = Date()
 //        let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
         
         guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
-        
-        print("startDate: \(startDate)")
-        print(interval.end)
+      
         // Create a predicate to search within the date range
-        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+        
+        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: Array(selectedCalendar))
         
         // Fetch the events
         let events = store.events(matching: predicate)
+        
+        totalMinutes = 0
         
         for event in events {
             if event.isAllDay{
