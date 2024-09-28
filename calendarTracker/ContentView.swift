@@ -38,11 +38,13 @@ struct ContentView: View {
                 viewModel.fetchPreviousEvents()
             }
             
-            List(viewModel.store.calendars(for: .event), id: \.self, selection: $viewModel.selectedCalendar) { cal in
-                Text(cal.title)
-                    .foregroundColor(Color(cal.color))
-                    .tag(cal.calendarIdentifier)
-            }
+            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendar, selectAll: true)
+            
+//            List(viewModel.store.calendars(for: .event), id: \.self, selection: $viewModel.selectedCalendar) { cal in
+//                Text(cal.title)
+//                    .foregroundColor(Color(cal.color))
+//                    .tag(cal.calendarIdentifier)
+//            }
             .onChange(of: viewModel.selectedCalendar) {val in
                 viewModel.fetchPreviousEvents()
             }
@@ -78,8 +80,8 @@ struct ContentView: View {
     
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}

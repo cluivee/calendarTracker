@@ -18,7 +18,7 @@ class CalendarViewModel: ObservableObject {
     @Published var startDate = Date()
     @Published var endDate = Date()
     
-    @Published var selectedCalendar = Set<EKCalendar>()
+    @Published var selectedCalendar: [EKCalendar] = []
     
     func checkCalendarAuthorizationStatus() {
         let status = EKEventStore.authorizationStatus(for: .event)
@@ -72,8 +72,8 @@ class CalendarViewModel: ObservableObject {
         guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
       
         // Create a predicate to search within the date range
+        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: selectedCalendar)
         
-        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: Array(selectedCalendar))
         
         // Fetch the events
         let events = store.events(matching: predicate)

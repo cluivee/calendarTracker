@@ -15,6 +15,7 @@
 		893EB9A82CA44CE200FAFA9F /* calendarTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB9A72CA44CE200FAFA9F /* calendarTrackerUITests.swift */; };
 		893EB9AA2CA44CE200FAFA9F /* calendarTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB9A92CA44CE200FAFA9F /* calendarTrackerUITestsLaunchTests.swift */; };
 		893EB9B72CA4573700FAFA9F /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB9B62CA4573700FAFA9F /* CalendarViewModel.swift */; };
+		8985378E2CA83B7D000D6E35 /* MultiSelectPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985378D2CA83B7D000D6E35 /* MultiSelectPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		893EB9A72CA44CE200FAFA9F /* calendarTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calendarTrackerUITests.swift; sourceTree = "<group>"; };
 		893EB9A92CA44CE200FAFA9F /* calendarTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calendarTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		893EB9B62CA4573700FAFA9F /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
+		8985378D2CA83B7D000D6E35 /* MultiSelectPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				893EB98B2CA44CDE00FAFA9F /* calendarTrackerApp.swift */,
 				893EB98D2CA44CDE00FAFA9F /* ContentView.swift */,
+				8985378D2CA83B7D000D6E35 /* MultiSelectPickerView.swift */,
 				893EB98F2CA44CE200FAFA9F /* Assets.xcassets */,
 				893EB9942CA44CE200FAFA9F /* calendarTracker.entitlements */,
 				893EB9912CA44CE200FAFA9F /* Preview Content */,
@@ -264,6 +267,7 @@
 			files = (
 				893EB9B72CA4573700FAFA9F /* CalendarViewModel.swift in Sources */,
 				893EB98E2CA44CDE00FAFA9F /* ContentView.swift in Sources */,
+				8985378E2CA83B7D000D6E35 /* MultiSelectPickerView.swift in Sources */,
 				893EB98C2CA44CDE00FAFA9F /* calendarTrackerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
