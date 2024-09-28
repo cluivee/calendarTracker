@@ -12,7 +12,7 @@ import SwiftUI
 
 class CalendarViewModel: ObservableObject {
     @Published var calendarEvents: [EKEvent] = []
-    let store = EKEventStore()
+    var store = EKEventStore()
     var totalMinutes:Double = 0.0
     
     @Published var startDate = Date()
@@ -72,11 +72,16 @@ class CalendarViewModel: ObservableObject {
         guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
       
         // Create a predicate to search within the date range
+        
         let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: selectedCalendar)
         
-        
         // Fetch the events
-        let events = store.events(matching: predicate)
+        var events: [EKEvent] = []
+        
+        if selectedCalendar.isEmpty == false {
+            events = store.events(matching: predicate)
+        }
+        
         
         totalMinutes = 0
         
