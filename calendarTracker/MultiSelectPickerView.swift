@@ -19,7 +19,6 @@ struct MultiSelectPickerView: View {
 
     var body: some View {
         Form {
-            Text(String(selectedItems.count))
             List {
                 Button(action: {
                     withAnimation {
@@ -33,6 +32,7 @@ struct MultiSelectPickerView: View {
                             selectAll.toggle()
                         }
                     }
+                    
                 }) {
                     HStack {
                         Image(systemName: selectAll ? "checkmark.square" : "square")

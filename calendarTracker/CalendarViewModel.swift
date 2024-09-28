@@ -17,8 +17,9 @@ class CalendarViewModel: ObservableObject {
     
     @Published var startDate = Date()
     @Published var endDate = Date()
+    @Published var searchTerm = ""
     
-    @Published var selectedCalendar: [EKCalendar] = []
+    @Published var selectedCalendars: [EKCalendar] = []
     
     func checkCalendarAuthorizationStatus() {
         let status = EKEventStore.authorizationStatus(for: .event)
@@ -29,6 +30,9 @@ class CalendarViewModel: ObservableObject {
             requestAccess()
         case .authorized:
             print("Calendar access authorized")
+            // this is just populating selectedCalendars when you first launch the app, otherwise selectedCalendars is an empty array
+            let calendars = self.store.calendars(for: .event)
+            self.selectedCalendars = calendars
             fetchPreviousEvents()
         case .denied:
             print("Calendar access denied")
@@ -44,6 +48,10 @@ class CalendarViewModel: ObservableObject {
         store.requestAccess(to: .event, completion:
              {(granted: Bool, error: Error?) -> Void in
                  if granted {
+                     // this is just populating selectedCalendars when you first launch the app, otherwise selectedCalendars is an empty array
+                     let calendars = self.store.calendars(for: .event)
+                     self.selectedCalendars = calendars
+                     print(String(describing: calendars))
                      self.fetchPreviousEvents()
                  } else {
                    print("Access denied")
@@ -62,26 +70,37 @@ class CalendarViewModel: ObservableObject {
     
     // Fetch previous events from the calendar
     func fetchPreviousEvents() {
-        let calendars = store.calendars(for: .event)
-        print(calendars)
-        
         // Specify the date range for fetching past events (e.g., last 1 year)
 //        let now = Date()
 //        let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
         
         guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
       
+        // Surely we don't actually need a predicate, we could just filter the events after the initial fetch of the data
         // Create a predicate to search within the date range
+        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: selectedCalendars)
         
-        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: selectedCalendar)
         
-        // Fetch the events
-        var events: [EKEvent] = []
-        
-        if selectedCalendar.isEmpty == false {
-            events = store.events(matching: predicate)
+        // Use a computed property to filter and fetch events
+        var events: [EKEvent] {
+            if !(selectedCalendars.isEmpty == false) {
+                print("selectedCalendar empty")
+                print(String(describing: selectedCalendars))
+                return []
+            } else if searchTerm.isEmpty {
+                print("searchterm empty")
+                return store.events(matching: predicate)
+                } else {
+                    let tempEvents = store.events(matching: predicate)
+                    print("searchterm not empty, should be filtering")
+                    return tempEvents.filter { $0.title.localizedCaseInsensitiveContains(searchTerm)}
+                }
         }
         
+        
+//        if selectedCalendar.isEmpty == false {
+//            events = store.events(matching: predicate)
+//        }
         
         totalMinutes = 0
         

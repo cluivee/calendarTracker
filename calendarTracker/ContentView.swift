@@ -8,7 +8,6 @@
 import SwiftUI
 import EventKit
 
-
 struct ContentView: View {
     
     @StateObject private var viewModel = CalendarViewModel()
@@ -22,7 +21,7 @@ struct ContentView: View {
         VStack {
             Text("Number of events: \(viewModel.calendarEvents.count)")
             Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
-            Text("\(String(describing: viewModel.selectedCalendar))")
+            Text("\(String(describing: viewModel.selectedCalendars))")
             DatePicker(
                 "Start Date",
                 selection: $viewModel.startDate,
@@ -37,15 +36,10 @@ struct ContentView: View {
             ).onChange(of: viewModel.endDate) {val in
                 viewModel.fetchPreviousEvents()
             }
-            
-            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendar, selectAll: true)
-            
-//            List(viewModel.store.calendars(for: .event), id: \.self, selection: $viewModel.selectedCalendar) { cal in
-//                Text(cal.title)
-//                    .foregroundColor(Color(cal.color))
-//                    .tag(cal.calendarIdentifier)
-//            }
-            .onChange(of: viewModel.selectedCalendar) {val in
+            SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
+            Text(String(viewModel.selectedCalendars.count))
+            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
+            .onChange(of: viewModel.selectedCalendars) {val in
                 viewModel.fetchPreviousEvents()
             }
             
@@ -61,8 +55,6 @@ struct ContentView: View {
                         Text(event.startDate, style: .time)
                         Text(event.calendar.title)
                             .foregroundColor(Color(event.calendar.color))
-                        // I would like to change the calendar text color to the same as the calendar's color, but foregroundStyle only allows the default colours at the moment
-                        //                                .foregroundStyle(.event.calendar.color)
                         
                         Text("Duration: \(String(format: "%.2f", viewModel.duration(of: event)/3600)) hours")
                         
