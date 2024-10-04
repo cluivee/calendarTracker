@@ -16,6 +16,7 @@ struct MultiSelectPickerView: View {
     @Binding var selectedItems: [EKCalendar]
     
     @State var selectAll: Bool
+    
 
     var body: some View {
         Form {
@@ -25,12 +26,11 @@ struct MultiSelectPickerView: View {
                         if selectAll {
                             // Previous comment: you may need to adapt this piece
                             self.selectedItems.removeAll()
-                            selectAll.toggle()
                         } else {
                             self.selectedItems.removeAll()
                             self.selectedItems.append(contentsOf: allItems)
-                            selectAll.toggle()
                         }
+                        selectAll.toggle()
                     }
                     
                 }) {

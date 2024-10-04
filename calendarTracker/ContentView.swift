@@ -12,7 +12,6 @@ struct ContentView: View {
     
     @StateObject private var viewModel = CalendarViewModel()
 //    @State private var selectedCalendar = Set<String>()
-    
     let names = [
         "Cyril","Lana","Mallory","Sterling"
     ]
@@ -21,26 +20,26 @@ struct ContentView: View {
         VStack {
             Text("Number of events: \(viewModel.calendarEvents.count)")
             Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
-            Text("\(String(describing: viewModel.selectedCalendars))")
+//            Text("\(String(describing: viewModel.selectedCalendars))")
             DatePicker(
                 "Start Date",
                 selection: $viewModel.startDate,
                 displayedComponents: [.date]
             ).onChange(of: viewModel.startDate) {val in
-                viewModel.fetchPreviousEvents()
+                viewModel.fetchEvents(caller: "a")
             }
             DatePicker(
                 "End Date",
                 selection: $viewModel.endDate,
                 displayedComponents: [.date]
             ).onChange(of: viewModel.endDate) {val in
-                viewModel.fetchPreviousEvents()
+                viewModel.fetchEvents(caller: "b")
             }
             SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
             Text(String(viewModel.selectedCalendars.count))
             MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
-            .onChange(of: viewModel.selectedCalendars) {val in
-                viewModel.fetchPreviousEvents()
+                .onChange(of: viewModel.selectedCalendars) {val in
+                viewModel.fetchEvents(caller: "c")
             }
             
             if viewModel.calendarEvents.isEmpty {

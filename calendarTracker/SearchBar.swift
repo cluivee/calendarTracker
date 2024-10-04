@@ -15,8 +15,10 @@ struct SearchBar: View {
     
     var body: some View {
         TextField("Search", text: $searchText, onCommit: {
+            withAnimation {
             print("on Commit enter key pressed")
-                viewModel.fetchPreviousEvents()
+                viewModel.fetchEvents(caller: "d")
+            }
         })
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding()

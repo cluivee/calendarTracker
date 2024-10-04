@@ -8,18 +8,21 @@
 import Foundation
 import EventKit
 import SwiftUI
-
+import Combine
 
 class CalendarViewModel: ObservableObject {
-    @Published var calendarEvents: [EKEvent] = []
+    
     var store = EKEventStore()
     var totalMinutes:Double = 0.0
+    
+    @Published var selectedCalendars: [EKCalendar] = []
+    @Published var calendarEvents: [EKEvent] = []
     
     @Published var startDate = Date()
     @Published var endDate = Date()
     @Published var searchTerm = ""
     
-    @Published var selectedCalendars: [EKCalendar] = []
+    
     
     func checkCalendarAuthorizationStatus() {
         let status = EKEventStore.authorizationStatus(for: .event)
@@ -33,7 +36,7 @@ class CalendarViewModel: ObservableObject {
             // this is just populating selectedCalendars when you first launch the app, otherwise selectedCalendars is an empty array
             let calendars = self.store.calendars(for: .event)
             self.selectedCalendars = calendars
-            fetchPreviousEvents()
+            fetchEvents(caller: "f")
         case .denied:
             print("Calendar access denied")
         case .restricted:
@@ -52,7 +55,7 @@ class CalendarViewModel: ObservableObject {
                      let calendars = self.store.calendars(for: .event)
                      self.selectedCalendars = calendars
                      print(String(describing: calendars))
-                     self.fetchPreviousEvents()
+                     self.fetchEvents(caller: "e")
                  } else {
                    print("Access denied")
                  }
@@ -68,18 +71,21 @@ class CalendarViewModel: ObservableObject {
             return durationSecs
         }
     
+    
+    
     // Fetch previous events from the calendar
-    func fetchPreviousEvents() {
+    func fetchEvents(caller: String) {
         // Specify the date range for fetching past events (e.g., last 1 year)
 //        let now = Date()
 //        let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
+        print(caller)
         
         guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
       
         // Surely we don't actually need a predicate, we could just filter the events after the initial fetch of the data
         // Create a predicate to search within the date range
         let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: selectedCalendars)
-        
+        let tempEvents = store.events(matching: predicate)
         
         // Use a computed property to filter and fetch events
         var events: [EKEvent] {
@@ -89,18 +95,12 @@ class CalendarViewModel: ObservableObject {
                 return []
             } else if searchTerm.isEmpty {
                 print("searchterm empty")
-                return store.events(matching: predicate)
+                return tempEvents
                 } else {
-                    let tempEvents = store.events(matching: predicate)
                     print("searchterm not empty, should be filtering")
                     return tempEvents.filter { $0.title.localizedCaseInsensitiveContains(searchTerm)}
                 }
         }
-        
-        
-//        if selectedCalendar.isEmpty == false {
-//            events = store.events(matching: predicate)
-//        }
         
         totalMinutes = 0
         
@@ -112,6 +112,8 @@ class CalendarViewModel: ObservableObject {
             
         }
         
+        
+        // TODO: 04/10/24 so fetchevents is being called twice because this updates the calendarevents, which then triggers onChange within the multiselectpickerview which is watching for selectedCalendar changes (well it was, now its just watching a toggle bool but it is still updating twice). OK all of them are calling this twice, so might have to rethink how this updates the viewmodel.
         // Update the @Published array
         DispatchQueue.main.async {
             self.calendarEvents = events.sorted { $0.compareStartDate(with: $1) == .orderedDescending }
