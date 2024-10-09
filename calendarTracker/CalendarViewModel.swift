@@ -22,7 +22,7 @@ class CalendarViewModel: ObservableObject {
     @Published var endDate = Date()
     @Published var searchTerm = ""
     
-    
+    private var cancellables = Set<AnyCancellable>()
     
     func checkCalendarAuthorizationStatus() {
         let status = EKEventStore.authorizationStatus(for: .event)
@@ -36,6 +36,7 @@ class CalendarViewModel: ObservableObject {
             // this is just populating selectedCalendars when you first launch the app, otherwise selectedCalendars is an empty array
             let calendars = self.store.calendars(for: .event)
             self.selectedCalendars = calendars
+            self.addSubscribers()
             fetchEvents(caller: "f")
         case .denied:
             print("Calendar access denied")
@@ -49,39 +50,84 @@ class CalendarViewModel: ObservableObject {
     // Request access to the calendar
     func requestAccess() {
         store.requestAccess(to: .event, completion:
-             {(granted: Bool, error: Error?) -> Void in
-                 if granted {
-                     // this is just populating selectedCalendars when you first launch the app, otherwise selectedCalendars is an empty array
-                     let calendars = self.store.calendars(for: .event)
-                     self.selectedCalendars = calendars
-                     print(String(describing: calendars))
-                     self.fetchEvents(caller: "e")
-                 } else {
-                   print("Access denied")
-                 }
-           })
-        }
+                                {(granted: Bool, error: Error?) -> Void in
+            if granted {
+                // this is just populating selectedCalendars when you first launch the app, otherwise selectedCalendars is an empty array
+                let calendars = self.store.calendars(for: .event)
+                self.selectedCalendars = calendars
+                print(String(describing: calendars))
+                self.addSubscribers()
+                self.fetchEvents(caller: "e")
+            } else {
+                print("Access denied")
+            }
+        })
+    }
     
     // calculating duration
     func duration(of event: EKEvent) -> Double {
-            let durationSecs = event.endDate.timeIntervalSince(event.startDate)
-//            let hours = Int(durationInSeconds) / 3600
-//            let minutes = (Int(durationInSeconds) % 3600) / 60
+        let durationSecs = event.endDate.timeIntervalSince(event.startDate)
+        return durationSecs
         
-            return durationSecs
+        //            let hours = Int(durationInSeconds) / 3600
+        //            let minutes = (Int(durationInSeconds) % 3600) / 60
+
+    }
+    
+    
+    // calculating totalMinutes
+    func calculateTotalDuration(of events: [EKEvent]) {
+        
+        totalMinutes = 0
+        
+        for event in events {
+            if event.isAllDay{
+                continue
+            }
+            totalMinutes += duration(of: event)
         }
+
+        
+    }
     
     
+    func addSubscribers() {
+        $searchTerm
+            .combineLatest($selectedCalendars, $startDate, $endDate)
+            .map{ (text, calendars, startDate, endDate) -> [EKEvent] in
+                
+                let predicate = self.store.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+                let tempEvents = self.store.events(matching: predicate)
+                
+                if !(calendars.isEmpty == false) {
+                    print("susbcriber selectedCalendar empty")
+                    //                    print(String(describing: self.selectedCalendars))
+                    return []
+                } else if text.isEmpty {
+                    print("subscriber searchterm empty")
+                    return tempEvents
+                } else {
+                    print("subscriber searchterm not empty, should be filtering")
+                    return tempEvents.filter { $0.title.localizedCaseInsensitiveContains(text)}
+                }
+                
+            }.sink { [weak self] (returnedEvents) in
+                self?.calendarEvents = returnedEvents
+                self?.calculateTotalDuration(of: returnedEvents)
+            }
+            .store(in: &cancellables)
+    }
     
-    // Fetch previous events from the calendar
+
+    // Fetch previous events from the calendar. This is now hardly used except for on launch, and maybe could be not used at all, instead maybe use an init
     func fetchEvents(caller: String) {
         // Specify the date range for fetching past events (e.g., last 1 year)
-//        let now = Date()
-//        let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
+        //        let now = Date()
+        //        let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
         print(caller)
         
-        guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
-      
+        //        guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
+        
         // Surely we don't actually need a predicate, we could just filter the events after the initial fetch of the data
         // Create a predicate to search within the date range
         let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: selectedCalendars)
@@ -96,20 +142,10 @@ class CalendarViewModel: ObservableObject {
             } else if searchTerm.isEmpty {
                 print("searchterm empty")
                 return tempEvents
-                } else {
-                    print("searchterm not empty, should be filtering")
-                    return tempEvents.filter { $0.title.localizedCaseInsensitiveContains(searchTerm)}
-                }
-        }
-        
-        totalMinutes = 0
-        
-        for event in events {
-            if event.isAllDay{
-                continue
+            } else {
+                print("searchterm not empty, should be filtering")
+                return tempEvents.filter { $0.title.localizedCaseInsensitiveContains(searchTerm)}
             }
-            totalMinutes += duration(of: event)
-            
         }
         
         
