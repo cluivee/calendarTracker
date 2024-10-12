@@ -79,7 +79,6 @@ class CalendarViewModel: ObservableObject {
     func calculateTotalDuration(of events: [EKEvent]) {
         
         totalMinutes = 0
-        
         for event in events {
             if event.isAllDay{
                 continue
@@ -112,7 +111,7 @@ class CalendarViewModel: ObservableObject {
                 }
                 
             }.sink { [weak self] (returnedEvents) in
-                self?.calendarEvents = returnedEvents
+                self?.calendarEvents = returnedEvents.sorted { $0.compareStartDate(with: $1) == .orderedDescending }
                 self?.calculateTotalDuration(of: returnedEvents)
             }
             .store(in: &cancellables)
