@@ -19,7 +19,9 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Text("Number of events: \(viewModel.calendarEvents.count)")
-            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
+//            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
+            Text("Total Duration: \(NumberFormatter.myFormat.string(from: viewModel.totalMinutes/3600)) hours")
+          
 //            Text("\(String(describing: viewModel.selectedCalendars))")
 //            List(viewModel.selectedCalendars, id: \.self) {
 //                Text($0.title)
@@ -59,7 +61,7 @@ struct ContentView: View {
                         Text(event.calendar.title)
                             .foregroundColor(Color(event.calendar.color))
                         
-                        Text("Duration: \(String(format: "%.2f", viewModel.duration(of: event)/3600)) hours")
+                        Text("Duration: \(NumberFormatter.myFormat.string(from: viewModel.duration(of: event)/3600)) hours")
                         
                     }
                     .padding(.vertical, 4)
@@ -80,3 +82,5 @@ struct ContentView: View {
 //        ContentView()
 //    }
 //}
+
+

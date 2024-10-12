@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		890E2C822CBB123D009F8C9A /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890E2C812CBB123D009F8C9A /* NumberFormatter.swift */; };
 		893EB98C2CA44CDE00FAFA9F /* calendarTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB98B2CA44CDE00FAFA9F /* calendarTrackerApp.swift */; };
 		893EB98E2CA44CDE00FAFA9F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893EB98D2CA44CDE00FAFA9F /* ContentView.swift */; };
 		893EB9902CA44CE200FAFA9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 893EB98F2CA44CE200FAFA9F /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		890E2C812CBB123D009F8C9A /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
 		893EB9882CA44CDE00FAFA9F /* calendarTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = calendarTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		893EB98B2CA44CDE00FAFA9F /* calendarTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calendarTrackerApp.swift; sourceTree = "<group>"; };
 		893EB98D2CA44CDE00FAFA9F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				893EB98B2CA44CDE00FAFA9F /* calendarTrackerApp.swift */,
 				893EB98D2CA44CDE00FAFA9F /* ContentView.swift */,
 				8985378F2CA8A411000D6E35 /* SearchBar.swift */,
+				890E2C812CBB123D009F8C9A /* NumberFormatter.swift */,
 				8985378D2CA83B7D000D6E35 /* MultiSelectPickerView.swift */,
 				893EB98F2CA44CE200FAFA9F /* Assets.xcassets */,
 				893EB9942CA44CE200FAFA9F /* calendarTracker.entitlements */,
@@ -269,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				893EB9B72CA4573700FAFA9F /* CalendarViewModel.swift in Sources */,
+				890E2C822CBB123D009F8C9A /* NumberFormatter.swift in Sources */,
 				893EB98E2CA44CDE00FAFA9F /* ContentView.swift in Sources */,
 				898537902CA8A411000D6E35 /* SearchBar.swift in Sources */,
 				8985378E2CA83B7D000D6E35 /* MultiSelectPickerView.swift in Sources */,
