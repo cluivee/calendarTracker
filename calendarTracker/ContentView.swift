@@ -34,6 +34,7 @@ struct ContentView: View {
             ).onChange(of: viewModel.startDate) {val in
 //                viewModel.fetchEvents(caller: "a")
             }
+            .padding(.horizontal)
             DatePicker(
                 "End Date",
                 selection: $viewModel.endDate,
@@ -41,6 +42,7 @@ struct ContentView: View {
             ).onChange(of: viewModel.endDate) {val in
 //                viewModel.fetchEvents(caller: "b")
             }
+            .padding(.horizontal)
             SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
             Text(String(viewModel.selectedCalendars.count))
             MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)

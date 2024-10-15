@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct SearchBar: View {
     
     @State private var tempSearchText = ""
@@ -15,15 +14,27 @@ struct SearchBar: View {
     @ObservedObject var viewModel: CalendarViewModel
     
     var body: some View {
-        TextField("Search", text: $tempSearchText, onCommit: {
-            withAnimation {
-            print("on Commit enter key pressed")
-//                viewModel.fetchEvents(caller: "d")
-                searchText = tempSearchText
+        HStack(spacing: 0){
+            TextField("Search", text: $tempSearchText, onCommit: {
+                withAnimation {
+                    //                viewModel.fetchEvents(caller: "d")
+                    searchText = tempSearchText
+                }
+            })
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            Button(action: {
+                withAnimation {
+                    searchText = tempSearchText
+                }
+            }) {
+                Text("Search")
             }
-        })
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            .padding()
+//            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.trailing)
+        
+            Spacer()
+        }
     }
 }
 
