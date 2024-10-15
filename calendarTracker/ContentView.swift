@@ -21,7 +21,7 @@ struct ContentView: View {
             Text("Number of events: \(viewModel.calendarEvents.count)")
 //            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
             Text("Total Duration: \(NumberFormatter.myFormat.string(from: viewModel.totalMinutes/3600)) hours")
-          
+            
 //            Text("\(String(describing: viewModel.selectedCalendars))")
 //            List(viewModel.selectedCalendars, id: \.self) {
 //                Text($0.title)
@@ -31,24 +31,17 @@ struct ContentView: View {
                 "Start Date",
                 selection: $viewModel.startDate,
                 displayedComponents: [.date]
-            ).onChange(of: viewModel.startDate) {val in
-//                viewModel.fetchEvents(caller: "a")
-            }
+            )
             .padding(.horizontal)
             DatePicker(
                 "End Date",
                 selection: $viewModel.endDate,
                 displayedComponents: [.date]
-            ).onChange(of: viewModel.endDate) {val in
-//                viewModel.fetchEvents(caller: "b")
-            }
+            )
             .padding(.horizontal)
             SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
             Text(String(viewModel.selectedCalendars.count))
             MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
-//                .onChange(of: viewModel.selectedCalendars) {val in
-//                viewModel.fetchEvents(caller: "c")
-//            }
             
             if viewModel.calendarEvents.isEmpty {
                 Text("No events found.")

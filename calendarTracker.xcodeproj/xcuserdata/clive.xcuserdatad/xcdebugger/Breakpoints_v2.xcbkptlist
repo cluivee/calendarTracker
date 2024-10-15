@@ -14,9 +14,9 @@
             filePath = "calendarTracker/CalendarViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
-            landmarkName = "fetchEvents(caller:)"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
+            landmarkName = "fetchEvents()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -30,9 +30,9 @@
             filePath = "calendarTracker/CalendarViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
-            landmarkName = "fetchEvents(caller:)"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
+            landmarkName = "fetchEvents()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

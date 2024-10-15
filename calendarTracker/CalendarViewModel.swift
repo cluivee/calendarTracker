@@ -12,7 +12,6 @@ import Combine
 
 class CalendarViewModel: ObservableObject {
     
-    
     // For performance reasons, Apple says EKEventStore only fetches events for previous 4 years. If difference between startDate and EndDate is more than 4 years it is shortened to the first 4 years
     var store = EKEventStore()
     var totalMinutes:Double = 0.0
@@ -39,7 +38,7 @@ class CalendarViewModel: ObservableObject {
             let calendars = self.store.calendars(for: .event)
             self.selectedCalendars = calendars
             self.addSubscribers()
-            fetchEvents(caller: "f")
+            fetchEvents()
         case .denied:
             print("Calendar access denied")
         case .restricted:
@@ -59,7 +58,7 @@ class CalendarViewModel: ObservableObject {
                 self.selectedCalendars = calendars
                 print(String(describing: calendars))
                 self.addSubscribers()
-                self.fetchEvents(caller: "e")
+                self.fetchEvents()
             } else {
                 print("Access denied")
             }
@@ -73,9 +72,7 @@ class CalendarViewModel: ObservableObject {
         
         //            let hours = Int(durationInSeconds) / 3600
         //            let minutes = (Int(durationInSeconds) % 3600) / 60
-
     }
-    
     
     // calculating totalMinutes
     func calculateTotalDuration(of events: [EKEvent]) {
@@ -88,7 +85,6 @@ class CalendarViewModel: ObservableObject {
             totalMinutes += duration(of: event)
         }
 
-        
     }
     
     
@@ -133,11 +129,10 @@ class CalendarViewModel: ObservableObject {
     
 
     // Fetch previous events from the calendar. This is now hardly used except for on launch, and maybe could be not used at all, instead maybe use an init
-    func fetchEvents(caller: String) {
+    func fetchEvents() {
         // Specify the date range for fetching past events (e.g., last 1 year)
         //        let now = Date()
         //        let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
-        print(caller)
         
         //        guard let interval = Calendar.current.dateInterval(of: .month, for: Date()) else {return}
         
@@ -160,7 +155,6 @@ class CalendarViewModel: ObservableObject {
                 return tempEvents.filter { $0.title.localizedCaseInsensitiveContains(searchTerm)}
             }
         }
-        
         
         // TODO: 04/10/24 so fetchevents is being called twice because this updates the calendarevents, which then triggers onChange within the multiselectpickerview which is watching for selectedCalendar changes (well it was, now its just watching a toggle bool but it is still updating twice). OK all of them are calling this twice, so might have to rethink how this updates the viewmodel.
         // Update the @Published array
