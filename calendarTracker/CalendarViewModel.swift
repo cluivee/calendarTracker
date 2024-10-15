@@ -12,6 +12,8 @@ import Combine
 
 class CalendarViewModel: ObservableObject {
     
+    
+    // For performance reasons, Apple says EKEventStore only fetches events for previous 4 years. If difference between startDate and EndDate is more than 4 years it is shortened to the first 4 years
     var store = EKEventStore()
     var totalMinutes:Double = 0.0
     
@@ -95,7 +97,19 @@ class CalendarViewModel: ObservableObject {
             .combineLatest($selectedCalendars, $startDate, $endDate)
             .map{ (text, calendars, startDate, endDate) -> [EKEvent] in
                 
-                let predicate = self.store.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+                var predicate = self.store.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+                
+                // apparently changing predicate works, but declaring a new variable for predicate does not
+                if let fourYearsBeforeEndDate = Calendar.current.date(byAdding: .year, value: -4, to: endDate) {
+                    
+                    if fourYearsBeforeEndDate > startDate {
+                         predicate = self.store.predicateForEvents(withStart: fourYearsBeforeEndDate, end: endDate, calendars: calendars)
+                    } else {
+                         predicate = self.store.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+                    }
+                }
+                
+//                let predicate = self.store.predicateForEvents(withStart: newDate, end: endDate, calendars: calendars)
                 let tempEvents = self.store.events(matching: predicate)
                 
                 if !(calendars.isEmpty == false) {

@@ -24,7 +24,6 @@ struct MultiSelectPickerView: View {
                 Button(action: {
                     withAnimation {
                         if selectAll {
-                            // Previous comment: you may need to adapt this piece
                             self.selectedItems.removeAll()
                         } else {
                             self.selectedItems.removeAll()
@@ -48,7 +47,6 @@ struct MultiSelectPickerView: View {
                     Button(action: {
                         withAnimation {
                             if self.selectedItems.contains(item) {
-                                // Previous comment: you may need to adapt this piece
                                 self.selectedItems.removeAll(where: { $0 == item })
                             } else {
                                 self.selectedItems.append(item)

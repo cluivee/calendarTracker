@@ -10,20 +10,20 @@ import SwiftUI
 
 struct SearchBar: View {
     
+    @State private var tempSearchText = ""
     @Binding var searchText: String
     @ObservedObject var viewModel: CalendarViewModel
     
     var body: some View {
-        TextField("Search", text: $searchText, onCommit: {
+        TextField("Search", text: $tempSearchText, onCommit: {
             withAnimation {
             print("on Commit enter key pressed")
-                viewModel.fetchEvents(caller: "d")
+//                viewModel.fetchEvents(caller: "d")
+                searchText = tempSearchText
             }
         })
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding()
-            
-
     }
 }
 
