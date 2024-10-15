@@ -17,15 +17,14 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        VStack {
-            Text("Number of events: \(viewModel.calendarEvents.count)")
-//            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
-            Text("Total Duration: \(NumberFormatter.myFormat.string(from: viewModel.totalMinutes/3600)) hours")
+        GeometryReader { proxy in
+            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true).frame(height: proxy.size.height)
+                .onAppear(perform: {print(proxy.size.height)})
             
-//            Text("\(String(describing: viewModel.selectedCalendars))")
-//            List(viewModel.selectedCalendars, id: \.self) {
-//                Text($0.title)
-//            }
+        }
+        
+        VStack {
+            
             Text("Start date: \(viewModel.startDate)")
             DatePicker(
                 "Start Date",
@@ -40,8 +39,10 @@ struct ContentView: View {
             )
             .padding(.horizontal)
             SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
-            Text(String(viewModel.selectedCalendars.count))
-            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
+          
+            Text("Number of events: \(viewModel.calendarEvents.count)")
+//            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
+            Text("Total Duration: \(NumberFormatter.myFormat.string(from: viewModel.totalMinutes/3600)) hours")
             
             if viewModel.calendarEvents.isEmpty {
                 Text("No events found.")
@@ -62,8 +63,11 @@ struct ContentView: View {
                     .padding(.vertical, 4)
                 }
             }
+            
         }
         .frame(minWidth: 300, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity, alignment: .topLeading)
+        
+
         .onAppear {
             viewModel.checkCalendarAuthorizationStatus()
         }

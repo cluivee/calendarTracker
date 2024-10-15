@@ -16,7 +16,6 @@ struct MultiSelectPickerView: View {
     @Binding var selectedItems: [EKCalendar]
     
     @State var selectAll: Bool
-    
 
     var body: some View {
         Form {
@@ -67,7 +66,7 @@ struct MultiSelectPickerView: View {
                     .foregroundColor(.primary)
                 }
             }
-        }
+        }.border(.blue)
     }
 }
 
