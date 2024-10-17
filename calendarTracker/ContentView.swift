@@ -17,13 +17,10 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        GeometryReader { proxy in
-            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true).frame(height: proxy.size.height)
-                .onAppear(perform: {print(proxy.size.height)})
-            
-        }
         
-        VStack {
+        
+        VStack (alignment: .leading){
+            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
             
             Text("Start date: \(viewModel.startDate)")
             DatePicker(

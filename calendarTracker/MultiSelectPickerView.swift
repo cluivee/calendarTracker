@@ -18,8 +18,8 @@ struct MultiSelectPickerView: View {
     @State var selectAll: Bool
 
     var body: some View {
-        Form {
-            List {
+        
+        VStack (alignment: .leading, spacing: 8) {
                 Button(action: {
                     withAnimation {
                         if selectAll {
@@ -40,6 +40,7 @@ struct MultiSelectPickerView: View {
                         Text(selectAll ? "Deselect All" : "Select All")
                     }
                 }
+                .padding(.horizontal)
                 .buttonStyle(PlainButtonStyle())
                 .foregroundColor(.primary)
                 ForEach(allItems, id: \.self) { item in
@@ -62,11 +63,12 @@ struct MultiSelectPickerView: View {
                                 .foregroundColor(Color(item.color))
                         }
                     }
+                    .padding(.horizontal)
                     .buttonStyle(PlainButtonStyle())
                     .foregroundColor(.primary)
                 }
             }
-        }.border(.blue)
-    }
+        .padding(.vertical)
+        }
 }
 
