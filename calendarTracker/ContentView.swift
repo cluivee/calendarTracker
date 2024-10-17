@@ -11,7 +11,7 @@ import EventKit
 struct ContentView: View {
     
     @StateObject private var viewModel = CalendarViewModel()
-//    @State private var selectedCalendar = Set<String>()
+    //    @State private var selectedCalendar = Set<String>()
     let names = [
         "Cyril","Lana","Mallory","Sterling"
     ]
@@ -21,29 +21,49 @@ struct ContentView: View {
         
         VStack (alignment: .leading){
             MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
-            
-            Text("Start date: \(viewModel.startDate)")
             DatePicker(
                 "Start Date",
                 selection: $viewModel.startDate,
                 displayedComponents: [.date]
             )
-            .padding(.horizontal)
+                .padding(.horizontal)
             DatePicker(
                 "End Date",
                 selection: $viewModel.endDate,
                 displayedComponents: [.date]
             )
-            .padding(.horizontal)
+                .padding(.horizontal)
             SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
-          
-            Text("Number of events: \(viewModel.calendarEvents.count)")
-//            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
-            Text("Total Duration: \(NumberFormatter.myFormat.string(from: viewModel.totalMinutes/3600)) hours")
+            
+            
+            Group {
+                Text("Number of events: ")
+                    .fontWeight(.heavy)
+                    .foregroundColor(.accentColor) +
+                Text("\(viewModel.calendarEvents.count)")
+                    .fontWeight(.heavy)
+            }
+            .padding(.horizontal)
+            .font(.title3)
+            
+            Group {
+                Text("Total Duration: ")
+                    .fontWeight(.heavy)
+                    .foregroundColor(.accentColor) +
+                Text("\(NumberFormatter.myFormat.string(from: viewModel.totalMinutes/3600)) hours")
+                    .fontWeight(.heavy)
+            }
+            .padding(.horizontal)
+            .font(.title3)
+            
+            //            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
+            
             
             if viewModel.calendarEvents.isEmpty {
                 Text("No events found.")
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.vertical, 4)
+                    .border(.red)
             } else {
                 List(viewModel.calendarEvents, id: \.eventIdentifier) { event in
                     VStack(alignment: .leading) {
@@ -58,13 +78,14 @@ struct ContentView: View {
                         
                     }
                     .padding(.vertical, 4)
+                    
                 }
             }
             
         }
         .frame(minWidth: 300, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity, alignment: .topLeading)
         
-
+        
         .onAppear {
             viewModel.checkCalendarAuthorizationStatus()
         }
