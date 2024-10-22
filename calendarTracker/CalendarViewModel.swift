@@ -12,6 +12,9 @@ import Combine
 
 class CalendarViewModel: ObservableObject {
     
+    @AppStorage("startDate") private var appStorageStartDate = Date()
+    @AppStorage("endDate") private var appStorageEndDate = Date()
+    
     // For performance reasons, Apple says EKEventStore only fetches events for previous 4 years. If difference between startDate and EndDate is more than 4 years it is shortened to the first 4 years
     var store = EKEventStore()
     var totalMinutes:Double = 0.0
@@ -92,16 +95,18 @@ class CalendarViewModel: ObservableObject {
         $searchTerm
             .combineLatest($selectedCalendars, $startDate, $endDate)
             .map{ (text, calendars, startDate, endDate) -> [EKEvent] in
+                // startDate which starts at 00:00 (start of day), otherwise it starts from the current time
+                let newStartDate = Calendar.current.startOfDay(for: startDate)
                 
-                var predicate = self.store.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+                var predicate = self.store.predicateForEvents(withStart: newStartDate, end: endDate.endOfDay, calendars: calendars)
                 
                 // apparently changing predicate works, but declaring a new variable for predicate does not
-                if let fourYearsBeforeEndDate = Calendar.current.date(byAdding: .year, value: -4, to: endDate) {
+                if let fourYearsBeforeEndDate = Calendar.current.date(byAdding: .year, value: -4, to: endDate.endOfDay) {
                     
-                    if fourYearsBeforeEndDate > startDate {
-                         predicate = self.store.predicateForEvents(withStart: fourYearsBeforeEndDate, end: endDate, calendars: calendars)
+                    if fourYearsBeforeEndDate > newStartDate {
+                         predicate = self.store.predicateForEvents(withStart: fourYearsBeforeEndDate, end: endDate.endOfDay, calendars: calendars)
                     } else {
-                         predicate = self.store.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+                         predicate = self.store.predicateForEvents(withStart: newStartDate, end: endDate.endOfDay, calendars: calendars)
                     }
                 }
                 
@@ -138,7 +143,7 @@ class CalendarViewModel: ObservableObject {
         
         // Surely we don't actually need a predicate, we could just filter the events after the initial fetch of the data
         // Create a predicate to search within the date range
-        let predicate = store.predicateForEvents(withStart: startDate, end: endDate, calendars: selectedCalendars)
+        let predicate = store.predicateForEvents(withStart: Calendar.current.startOfDay(for: appStorageStartDate), end: appStorageEndDate.endOfDay, calendars: selectedCalendars)
         let tempEvents = store.events(matching: predicate)
         
         // Use a computed property to filter and fetch events

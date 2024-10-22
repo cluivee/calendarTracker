@@ -16,6 +16,9 @@ struct ContentView: View {
         "Cyril","Lana","Mallory","Sterling"
     ]
     
+    @AppStorage("startDate") private var appStorageStartDate = Date()
+    @AppStorage("endDate") private var appStorageEndDate = Date()
+    
     var body: some View {
         
         
@@ -27,12 +30,18 @@ struct ContentView: View {
                 displayedComponents: [.date]
             )
                 .padding(.horizontal)
+                .onChange(of: viewModel.startDate) {val in
+                    appStorageStartDate = val
+                }
             DatePicker(
                 "End Date",
                 selection: $viewModel.endDate,
                 displayedComponents: [.date]
             )
                 .padding(.horizontal)
+                .onChange(of: viewModel.endDate) {val in
+                    appStorageEndDate = val
+                }
             SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
             
             
@@ -63,7 +72,6 @@ struct ContentView: View {
                 Text("No events found.")
                     .padding(.horizontal)
                     .padding(.vertical, 4)
-                    .border(.red)
             } else {
                 List(viewModel.calendarEvents, id: \.eventIdentifier) { event in
                     VStack(alignment: .leading) {
@@ -86,13 +94,46 @@ struct ContentView: View {
         .frame(minWidth: 300, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity, alignment: .topLeading)
         
         
+        
         .onAppear {
             viewModel.checkCalendarAuthorizationStatus()
+            restoreAppStorage()
         }
+    }
+    
+    private func restoreAppStorage() {
+        viewModel.startDate = appStorageStartDate
+        viewModel.endDate = appStorageEndDate
     }
     
     
 }
+
+
+// extension to allow dates to be stored in AppStorage
+extension Date: RawRepresentable {
+    public var rawValue: String {
+        ISO8601DateFormatter().string(from: self)
+    }
+    
+    public init?(rawValue: String) {
+        guard let date = ISO8601DateFormatter().date(from: rawValue) else {
+            return nil
+        }
+        self = date
+    }
+    
+    var endOfDay: Date {
+        var components = DateComponents()
+        components.day = 1
+        //            components.second = -1
+        guard let nextDay = Calendar.current.date(byAdding: components, to: self) else { return Date() }
+        let startOfNextDay = Calendar.current.startOfDay(for: nextDay)
+        return startOfNextDay
+        
+    }
+}
+
 
 //struct ContentView_Previews: PreviewProvider {
 //    static var previews: some View {
