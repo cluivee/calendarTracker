@@ -16,6 +16,8 @@ struct ContentView: View {
     @AppStorage("startDate") private var appStorageStartDate = Date()
     @AppStorage("endDate") private var appStorageEndDate = Date()
     
+    let testArray = ["aa", "ab"]
+    
     var body: some View {
         VStack (alignment: .leading){
             MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
