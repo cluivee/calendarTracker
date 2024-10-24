@@ -44,8 +44,6 @@ struct MultiSelectPickerView: View {
                 .buttonStyle(PlainButtonStyle())
                 .foregroundColor(.primary)
                 ForEach(allItems, id: \.self) { item in
-//                    if item.title == "Holidays in United Kingdom" || item.title == "User Testing" || item.title == "Financial" || item.title == "Gym" {
-                        
                     
                     Button(action: {
                         withAnimation {
@@ -70,7 +68,6 @@ struct MultiSelectPickerView: View {
                     .buttonStyle(PlainButtonStyle())
                     .foregroundColor(.primary)
                     }
-//                }
             }
         .padding(.vertical)
         }
