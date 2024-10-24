@@ -87,7 +87,6 @@ class CalendarViewModel: ObservableObject {
             }
             totalMinutes += duration(of: event)
         }
-
     }
     
     
@@ -114,14 +113,10 @@ class CalendarViewModel: ObservableObject {
                 let tempEvents = self.store.events(matching: predicate)
                 
                 if !(calendars.isEmpty == false) {
-                    print("susbcriber selectedCalendar empty")
-                    //                    print(String(describing: self.selectedCalendars))
                     return []
                 } else if text.isEmpty {
-                    print("subscriber searchterm empty")
                     return tempEvents
                 } else {
-                    print("subscriber searchterm not empty, should be filtering")
                     return tempEvents.filter { $0.title.localizedCaseInsensitiveContains(text)}
                 }
                 

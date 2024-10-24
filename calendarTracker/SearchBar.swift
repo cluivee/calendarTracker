@@ -17,7 +17,6 @@ struct SearchBar: View {
         HStack(spacing: 0){
             TextField("Search", text: $tempSearchText, onCommit: {
                 withAnimation {
-                    //                viewModel.fetchEvents(caller: "d")
                     searchText = tempSearchText
                 }
             })
@@ -32,7 +31,6 @@ struct SearchBar: View {
             }
 //            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.trailing)
-        
             Spacer()
         }
     }

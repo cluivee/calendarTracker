@@ -12,38 +12,47 @@ struct ContentView: View {
     
     @StateObject private var viewModel = CalendarViewModel()
     //    @State private var selectedCalendar = Set<String>()
-    let names = [
-        "Cyril","Lana","Mallory","Sterling"
-    ]
     
     @AppStorage("startDate") private var appStorageStartDate = Date()
     @AppStorage("endDate") private var appStorageEndDate = Date()
     
     var body: some View {
-        
-        
         VStack (alignment: .leading){
             MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
-            DatePicker(
-                "Start Date",
-                selection: $viewModel.startDate,
-                displayedComponents: [.date]
-            )
-                .padding(.horizontal)
-                .onChange(of: viewModel.startDate) {val in
-                    appStorageStartDate = val
+            HStack (spacing: 0){
+                VStack{
+                    DatePicker(
+                        "Start Date",
+                        selection: $viewModel.startDate,
+                        displayedComponents: [.date]
+                    )
+                        .padding(.horizontal)
+                        .onChange(of: viewModel.startDate) {val in
+                            appStorageStartDate = val
+                        }
+                    DatePicker(
+                        "End Date",
+                        selection: $viewModel.endDate,
+                        displayedComponents: [.date]
+                    )
+                        .padding(.horizontal)
+                        .onChange(of: viewModel.endDate) {val in
+                            appStorageEndDate = val
+                        }
+                    
                 }
-            DatePicker(
-                "End Date",
-                selection: $viewModel.endDate,
-                displayedComponents: [.date]
-            )
-                .padding(.horizontal)
-                .onChange(of: viewModel.endDate) {val in
-                    appStorageEndDate = val
+                Button(action: {
+                    withAnimation {
+                        viewModel.startDate = Date()
+                        viewModel.endDate = Date()
+                    }
+                }) {
+                    Text("Today")
                 }
+                .padding(.trailing)
+                Spacer()
+            }
             SearchBar(searchText: $viewModel.searchTerm, viewModel: viewModel)
-            
             
             Group {
                 Text("Number of events: ")
@@ -65,9 +74,6 @@ struct ContentView: View {
             .padding(.horizontal)
             .font(.title3)
             
-            //            Text("Total Duration: \(String(format: "%.2f", viewModel.totalMinutes/3600)) hours")
-            
-            
             if viewModel.calendarEvents.isEmpty {
                 Text("No events found.")
                     .padding(.horizontal)
@@ -83,18 +89,13 @@ struct ContentView: View {
                             .foregroundColor(Color(event.calendar.color))
                         
                         Text("Duration: \(NumberFormatter.myFormat.string(from: viewModel.duration(of: event)/3600)) hours")
-                        
                     }
                     .padding(.vertical, 4)
-                    
                 }
             }
             
         }
         .frame(minWidth: 300, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity, alignment: .topLeading)
-        
-        
-        
         .onAppear {
             viewModel.checkCalendarAuthorizationStatus()
             restoreAppStorage()
@@ -105,10 +106,7 @@ struct ContentView: View {
         viewModel.startDate = appStorageStartDate
         viewModel.endDate = appStorageEndDate
     }
-    
-    
 }
-
 
 // extension to allow dates to be stored in AppStorage
 extension Date: RawRepresentable {
@@ -133,7 +131,6 @@ extension Date: RawRepresentable {
         
     }
 }
-
 
 //struct ContentView_Previews: PreviewProvider {
 //    static var previews: some View {
