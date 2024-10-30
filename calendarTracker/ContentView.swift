@@ -74,15 +74,13 @@ struct ContentView: View {
             .padding(.horizontal)
             .font(.title3)
             
-            Button(action: {
-                withAnimation {
-                    duplicateEvents()
-                    
-                    
-                }
-            }) {
-                Text("Duplicate Events")
-            }
+//            Button(action: {
+//                withAnimation {
+////                    duplicateEvents()
+//                }
+//            }) {
+//                Text("Duplicate Events")
+//            }
             
             if viewModel.calendarEvents.isEmpty {
                 Text("No events found.")
@@ -120,10 +118,11 @@ struct ContentView: View {
     private func duplicateEvents() {
         for event in viewModel.calendarEvents {
             let newEvent = EKEvent(eventStore: viewModel.store)
+            // Saving to my work calendar by filtering to access the work calendar
             guard let workCalendar = viewModel.store.calendars(for: .event).first(where: { $0.title == "Work" }) else {
-                  print("Work calendar not found")
-                  return
-              }
+                print("Work calendar not found")
+                return
+            }
             newEvent.calendar = workCalendar
             newEvent.title = "Copy of Morrisons Work: \(event.title!)"
             newEvent.startDate = event.startDate
@@ -132,14 +131,12 @@ struct ContentView: View {
             newEvent.notes = event.notes
             newEvent.isAllDay = event.isAllDay
             
-            
-            print(newEvent)
-            print(newEvent.calendar)
-            print(newEvent.startDate)
-            print(newEvent.endDate)
-            print(newEvent.location)
-            print(newEvent.notes)
-            print(newEvent.isAllDay)
+            do {
+                try viewModel.store.save(newEvent, span: .thisEvent)
+                print("Successfully duplicated event: \(newEvent.title ?? "")")
+            } catch {
+                print("Failed to save duplicated event: \(error.localizedDescription)")
+            }
         }
         
     }
