@@ -74,6 +74,16 @@ struct ContentView: View {
             .padding(.horizontal)
             .font(.title3)
             
+            Button(action: {
+                withAnimation {
+                    duplicateEvents()
+                    
+                    
+                }
+            }) {
+                Text("Duplicate Events")
+            }
+            
             if viewModel.calendarEvents.isEmpty {
                 Text("No events found.")
                     .padding(.horizontal)
@@ -105,6 +115,33 @@ struct ContentView: View {
     private func restoreAppStorage() {
         viewModel.startDate = appStorageStartDate
         viewModel.endDate = appStorageEndDate
+    }
+    
+    private func duplicateEvents() {
+        for event in viewModel.calendarEvents {
+            let newEvent = EKEvent(eventStore: viewModel.store)
+            guard let workCalendar = viewModel.store.calendars(for: .event).first(where: { $0.title == "Work" }) else {
+                  print("Work calendar not found")
+                  return
+              }
+            newEvent.calendar = workCalendar
+            newEvent.title = "Copy of Morrisons Work: \(event.title!)"
+            newEvent.startDate = event.startDate
+            newEvent.endDate = event.endDate
+            newEvent.location = event.location
+            newEvent.notes = event.notes
+            newEvent.isAllDay = event.isAllDay
+            
+            
+            print(newEvent)
+            print(newEvent.calendar)
+            print(newEvent.startDate)
+            print(newEvent.endDate)
+            print(newEvent.location)
+            print(newEvent.notes)
+            print(newEvent.isAllDay)
+        }
+        
     }
 }
 
