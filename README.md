@@ -10,5 +10,3 @@ Also works as an iOS app.
 <img width="328" alt="Calendar Tracker" src="https://github.com/user-attachments/assets/e259e65d-454c-415f-a6fc-6370edb30213">
 
 <img width="328" alt="Calendar Tracker iOS" src="https://github.com/user-attachments/assets/a9f102ab-dbd1-4259-abc5-5f00f0bed17d">
-
-![Simulator Screen Shot - iPhone 8 - 2024-11-24 at 21 37 14](https://github.com/user-attachments/assets/a9f102ab-dbd1-4259-abc5-5f00f0bed17d)
