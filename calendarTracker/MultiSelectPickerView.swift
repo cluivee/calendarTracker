@@ -61,7 +61,7 @@ struct MultiSelectPickerView: View {
                                 .controlSize(.large)
 //                                .opacity(self.selectedItems.contains(item) ? 1.0 : 0.0)
                             Text(item.title)
-                                .foregroundColor(Color(item.color))
+                                .foregroundColor(Color(item.cgColor))
                         }
                     }
                     .padding(.horizontal)
@@ -71,5 +71,7 @@ struct MultiSelectPickerView: View {
             }
         .padding(.vertical)
         }
+    
+    
 }
 

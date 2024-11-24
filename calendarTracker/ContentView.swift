@@ -18,7 +18,12 @@ struct ContentView: View {
     
     var body: some View {
         VStack (alignment: .leading){
-            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event), selectedItems: $viewModel.selectedCalendars, selectAll: true)
+            MultiSelectPickerView(allItems: viewModel.store.calendars(for: .event),
+                                  selectedItems: $viewModel.selectedCalendars,
+                                  selectAll: true)
+#if os(macOS)
+                .frame(maxHeight:300)
+#endif
             HStack (spacing: 0){
                 VStack{
                     DatePicker(
@@ -30,6 +35,7 @@ struct ContentView: View {
                         .onChange(of: viewModel.startDate) {val in
                             appStorageStartDate = val
                         }
+                    
                     DatePicker(
                         "End Date",
                         selection: $viewModel.endDate,
@@ -74,13 +80,6 @@ struct ContentView: View {
             .padding(.horizontal)
             .font(.title3)
             
-//            Button(action: {
-//                withAnimation {
-////                    duplicateEvents()
-//                }
-//            }) {
-//                Text("Duplicate Events")
-//            }
             
             if viewModel.calendarEvents.isEmpty {
                 Text("No events found.")
@@ -88,13 +87,17 @@ struct ContentView: View {
                     .padding(.vertical, 4)
             } else {
                 List(viewModel.calendarEvents, id: \.eventIdentifier) { event in
+                    let a = print(event.calendar)
+                    
                     VStack(alignment: .leading) {
                         Text(event.title ?? "No Title")
                             .font(.headline)
                         Text(event.startDate, style: .date)
                         Text(event.startDate, style: .time)
                         Text(event.calendar.title)
-                            .foregroundColor(Color(event.calendar.color))
+                        // this cgColor thing is part of EventKit and returns the color as CGColorRef, no idea why calendar.color apparently returns color as NSColor which is only available on macOS
+                            .foregroundColor(Color(event.calendar.cgColor))
+
                         
                         Text("Duration: \(NumberFormatter.myFormat.string(from: viewModel.duration(of: event)/3600)) hours")
                     }
@@ -115,31 +118,33 @@ struct ContentView: View {
         viewModel.endDate = appStorageEndDate
     }
     
-    private func duplicateEvents() {
-        for event in viewModel.calendarEvents {
-            let newEvent = EKEvent(eventStore: viewModel.store)
-            // Saving to my work calendar by filtering to access the work calendar
-            guard let workCalendar = viewModel.store.calendars(for: .event).first(where: { $0.title == "Work" }) else {
-                print("Work calendar not found")
-                return
-            }
-            newEvent.calendar = workCalendar
-            newEvent.title = "Copy of Morrisons Work: \(event.title!)"
-            newEvent.startDate = event.startDate
-            newEvent.endDate = event.endDate
-            newEvent.location = event.location
-            newEvent.notes = event.notes
-            newEvent.isAllDay = event.isAllDay
-            
-            do {
-                try viewModel.store.save(newEvent, span: .thisEvent)
-                print("Successfully duplicated event: \(newEvent.title ?? "")")
-            } catch {
-                print("Failed to save duplicated event: \(error.localizedDescription)")
-            }
-        }
-        
-    }
+    
+    // function to duplicate a range of events, not used at the moment
+    //    private func duplicateEvents() {
+    //        for event in viewModel.calendarEvents {
+    //            let newEvent = EKEvent(eventStore: viewModel.store)
+    //            // Saving to my work calendar by filtering to access the work calendar
+    //            guard let workCalendar = viewModel.store.calendars(for: .event).first(where: { $0.title == "Work" }) else {
+    //                print("Work calendar not found")
+    //                return
+    //            }
+    //            newEvent.calendar = workCalendar
+    //            newEvent.title = "Copy of Morrisons Work: \(event.title!)"
+    //            newEvent.startDate = event.startDate
+    //            newEvent.endDate = event.endDate
+    //            newEvent.location = event.location
+    //            newEvent.notes = event.notes
+    //            newEvent.isAllDay = event.isAllDay
+    //
+    //            do {
+    //                try viewModel.store.save(newEvent, span: .thisEvent)
+    //                print("Successfully duplicated event: \(newEvent.title ?? "")")
+    //            } catch {
+    //                print("Failed to save duplicated event: \(error.localizedDescription)")
+    //            }
+    //        }
+    //
+    //    }
 }
 
 // extension to allow dates to be stored in AppStorage
