@@ -87,7 +87,6 @@ struct ContentView: View {
                     .padding(.vertical, 4)
             } else {
                 List(viewModel.calendarEvents, id: \.eventIdentifier) { event in
-                    let a = print(event.calendar)
                     
                     VStack(alignment: .leading) {
                         Text(event.title ?? "No Title")
